@@ -73,15 +73,16 @@
     title.addTo(map);
 
     // --- Custom attribution ---
-    var attribution = L.control({ position: 'bottomright' });
+     var attribution = L.control({position: 'bottomright'});
 
     attribution.onAdd = function(map) {
-        var div = L.DomUtil.create('div', 'ctl src'); // you can reuse your .ctl .src CSS
-        div.innerHTML = '© Your Organization, 2025';
+        var div = L.DomUtil.create('div', 'ctl src');
+        div.innerHTML = '<a href="https://github.com/fer-at-sea/mataro_swipe_map" target="_blank">fer-at-sea (Seagrass Ecology Group GEAM IEO-CSIC)</a>';
         return div;
     };
 
     attribution.addTo(map);
+
 
     // --- Legends ---
     var species_colors_2010 = {
