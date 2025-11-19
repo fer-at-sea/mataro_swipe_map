@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+  <title>Mataró 2010 vs 2025 Side-by-Side</title>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.5/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@0.7.5/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/digidem/leaflet-side-by-side@2.0.0/leaflet-side-by-side.min.js"></script>
+
+  <style>
+    body { margin:0; padding:0; }
+    #map { position:absolute; top:0; bottom:0; width:100%; }
+
+    .ctl {
+        padding: 2px 10px;
+        background: rgba(255,255,255,0.9);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        text-align: left;
+        font-size: 12px;
+    }
+    .title { font-size: 18pt; font-weight: bold; margin-bottom: 5px; }
+    .legend i { width: 18px; height: 18px; display: inline-block; margin-right: 5px; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    // --- Base map ---
+    var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        minZoom: 8, maxZoom: 18
+    });
+
+    // --- Overlay rasters ---
+    var raster2010 = L.tileLayer('./tiles_2010/{z}/{x}/{y}.png', {
+        tms: 1,
+        opacity: 1,
+        minZoom: 8, maxZoom: 18,
+        attribution: "2010 Raster"
+    });
+
+    var raster2025 = L.tileLayer('./tiles_2025/{z}/{x}/{y}.png', {
+        tms: 1,
+        opacity: 1,
+        minZoom: 8, maxZoom: 18,
+        attribution: "2025 Raster"
+    });
+
+    // --- Map ---
+    var map = L.map('map', {
+        center: [41.525, 2.475],
+        zoom: 14,
+        minZoom: 8,
+        maxZoom: 18,
+        layers: [osm, raster2010, raster2025]
+    });
+
+    // --- Side-by-side control ---
+    var swipe = L.control.sideBySide(raster2010, raster2025).addTo(map);
+
+    // --- Map title ---
+    var title = L.control();
+    title.onAdd = function(map) {
+        var div = L.DomUtil.create('div', 'ctl title');
+        div.innerHTML = "Mataró 2010 vs 2025";
+        return div;
+    };
+    title.addTo(map);
+
+    // --- Custom attribution ---
+    var attribution = L.control({ position: 'bottomright' });
+
+    attribution.onAdd = function(map) {
+        var div = L.DomUtil.create('div', 'ctl src'); // you can reuse your .ctl .src CSS
+        div.innerHTML = '© Your Organization, 2025';
+        return div;
+    };
+
+    attribution.addTo(map);
+
+    // --- Legends ---
+    var species_colors_2010 = {
+        'Cymodocea nodosa': '#7f2ca0', 
+        'Posidonia a taques': "#0d00ff",
+        'Posidonia poc densa': "#bff8b4",
+        'Posidonia densa': "#49f327",
+        'Posidonia molt densa': "#166b05",
+        'Mata morta': '#d62728'
+    };
+
+    var species_colors_2025 = {
+        'Cymodocea nodosa': '#7f2ca0',
+        'Posidonia oceanica': "#166B05"
+    };
+
+    function addLegend(colors, position, titleText) {
+        var legend = L.control({position: position});
+        legend.onAdd = function(map) {
+            var div = L.DomUtil.create('div', 'ctl legend');
+            div.innerHTML = "<b>" + titleText + "</b><br>";
+            for (var key in colors) {
+                div.innerHTML +=
+                    '<i style="background:' + colors[key] + '"></i> ' + key + '<br>';
+            }
+            return div;
+        };
+        legend.addTo(map);
+    }
+
+    addLegend(species_colors_2010, 'bottomleft', 'Alguer Mataró 2010');
+    addLegend(species_colors_2025, 'bottomright', 'Mapa dels hàbitats marins 2025');
+
+
+
+    // --- Fit map to raster bounds ---
+    map.fitBounds([[41.495, 2.419], [41.556, 2.532]]);
+  </script>
+</body>
+</html>
