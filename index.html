@@ -30,24 +30,25 @@
   <div id="map"></div>
 
   <script>
-    // --- Base map ---
+    // --- Base maps ---
     var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors',
-        minZoom: 8, maxZoom: 18
+        minZoom: 12, maxZoom: 18
     });
+    
 
     // --- Overlay rasters ---
     var raster2010 = L.tileLayer('./tiles_2010/{z}/{x}/{y}.png', {
         tms: 1,
         opacity: 1,
-        minZoom: 8, maxZoom: 18,
+        minZoom: 12, maxZoom: 18,
         attribution: "2010 Raster"
     });
 
     var raster2025 = L.tileLayer('./tiles_2025/{z}/{x}/{y}.png', {
         tms: 1,
         opacity: 1,
-        minZoom: 8, maxZoom: 18,
+        minZoom: 12, maxZoom: 18,
         attribution: "2025 Raster"
     });
 
@@ -55,7 +56,7 @@
     var map = L.map('map', {
         center: [41.525, 2.475],
         zoom: 14,
-        minZoom: 8,
+        minZoom: 12,
         maxZoom: 18,
         layers: [osm, raster2010, raster2025]
     });
