@@ -102,14 +102,9 @@
     },
     onEachFeature: function(feature, layer) {
         var p = feature.properties || {};
-        var title = p.Ref_punto || p.Ref || p.Ref_point || 'Video point';
-        var html = '<b>' + title + '</b><br/>';
-        if (p.Observado) html += '<b>Observed:</b> ' + p.Observado + '<br/>';
-        if (p["Carto antigua"] || p["Carto nueva"]) {
-            html += '<b>Carto:</b> ' + (p["Carto antigua"] || '-') + ' / ' + (p["Carto nueva"] || '-') + '<br>';
-        }
-        // fallback: show all props
-        html += '<hr>' + Object.entries(p).map(([k,v]) => `${k}: ${v}`).join('<br>');
+        var title = p.Ref_punto || 'Video point';
+        var html = '<b>' + title + '</b><br><hr>';
+        html += Object.entries(p).map(([k,v]) => `${k}: ${v}`).join('<br>');
         layer.bindPopup(html);
     }
     });
