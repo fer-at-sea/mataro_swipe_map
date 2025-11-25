@@ -64,6 +64,36 @@
     // --- Side-by-side control ---
     var swipe = L.control.sideBySide(raster2010, raster2025).addTo(map);
 
+    // --- Lat/Lon + Zoom indicator ---
+    var coordsControl = L.control({ position: 'bottomleft' });
+
+    coordsControl.onAdd = function(map) {
+        var div = L.DomUtil.create('div', 'ctl coords');
+        div.id = "mouseCoords";
+        div.innerHTML = "lat: -- , lon: -- , zoom: " + map.getZoom();
+        return div;
+    };
+
+    coordsControl.addTo(map);
+
+    // Update on mouse move
+    map.on("mousemove", function(e) {
+        document.getElementById("mouseCoords").innerHTML =
+            "lat: " + e.latlng.lat.toFixed(5) +
+            " , lon: " + e.latlng.lng.toFixed(5) +
+            " , zoom: " + map.getZoom();
+    });
+
+    // Update zoom value
+    map.on("zoomend", function() {
+        var div = document.getElementById("mouseCoords");
+        if (div.innerHTML.includes("lat:")) {
+            // extract last lat/lon
+            let text = div.innerHTML.split(", zoom")[0];
+            div.innerHTML = text + " , zoom: " + map.getZoom();
+        }
+    });
+
     // --- Map title ---
     var title = L.control();
     title.onAdd = function(map) {
@@ -116,6 +146,8 @@
 
     addLegend(species_colors_2010, 'bottomleft', 'Alguer Mataró 2010');
     addLegend(species_colors_2025, 'bottomright', 'Mapa dels hàbitats marins 2025');
+    
+    
 
 
 
