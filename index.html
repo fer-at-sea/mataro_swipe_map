@@ -30,13 +30,41 @@
   <div id="map"></div>
 
   <script>
-    // --- Base maps ---
+
+    // Base maps
     var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors',
         minZoom: 12, maxZoom: 18
     });
 
-    // Empty vector layers
+    // Raster layers
+    var raster2010 = L.tileLayer('./tiles_2010/{z}/{x}/{y}.png', {
+        tms: 1,
+        opacity: 1,
+        minZoom: 12, maxZoom: 18,
+        attribution: "2010 Raster"
+    });
+
+    var raster2025 = L.tileLayer('./tiles_2025/{z}/{x}/{y}.png', {
+        tms: 1,
+        opacity: 1,
+        minZoom: 12, maxZoom: 18,
+        attribution: "2025 Raster"
+    });
+    
+    // Map 
+        var map = L.map('map', {
+            center: [41.525, 2.475],
+            zoom: 14,
+            minZoom: 12,
+            maxZoom: 18,
+            layers: [osm, raster2010, raster2025]
+        });
+        
+    // Side-by-side control
+    var swipe = L.control.sideBySide(raster2010, raster2025).addTo(map);
+
+    // Vector layers
     var stationsLayer = L.geoJSON(null, {
         pointToLayer: function (feature, latlng) {
             return L.circleMarker(latlng, {
@@ -99,59 +127,22 @@
     });
 
     // Fetch data
-    fetch('stations.geojson')
-        .then(res => res.json())
-        .then(data => stationsLayer.addData(data));
-
-    fetch('video_tracks.geojson')
-        .then(res => res.json())
-        .then(data => videoTracksLayer.addData(data));
+    fetch('stations.geojson').then(res => res.json()).then(data => stationsLayer.addData(data));
+    fetch('video_tracks.geojson').then(res => res.json()).then(data => videoTracksLayer.addData(data));
+    fetch('video_points.geojson').then(res => res.json()).then(data => videoPointsLayer.addData(data));
+    fetch('points_2010.geojson').then(res => res.json()).then(data => points2010Layer.addData(data));
     
-    fetch('video_points.geojson')
-        .then(res => res.json())
-        .then(data => videoPointsLayer.addData(data));
+    // --- Layer control ---
+    L.control.layers(null,{
+        "Stations": stationsLayer,
+        "Video tracks": videoTracksLayer,
+        "Video points": videoPointsLayer,
+        "Points 2010": points2010Layer
+    }, {position:'topleft'}).addTo(map);
 
-    fetch('points_2010.geojson')
-        .then(res => res.json())
-        .then(data => points2010Layer.addData(data));
-
-    // Layer control
-    var overlayMaps = {
-    "Stations": stationsLayer,
-    "Video tracks": videoTracksLayer,
-    "Video points": videoPointsLayer,
-    "Points 2010": points2010Layer
-    };
-
-    L.control.layers(null, overlayMaps, { position: 'topleft' }).addTo(map);
+    // Fit bounds
+    map.fitBounds([[41.495, 2.419], [41.556, 2.532]]);
             
-
-    // --- Overlay rasters ---
-    var raster2010 = L.tileLayer('./tiles_2010/{z}/{x}/{y}.png', {
-        tms: 1,
-        opacity: 1,
-        minZoom: 12, maxZoom: 18,
-        attribution: "2010 Raster"
-    });
-
-    var raster2025 = L.tileLayer('./tiles_2025/{z}/{x}/{y}.png', {
-        tms: 1,
-        opacity: 1,
-        minZoom: 12, maxZoom: 18,
-        attribution: "2025 Raster"
-    });
-
-    // --- Map ---
-    var map = L.map('map', {
-        center: [41.525, 2.475],
-        zoom: 14,
-        minZoom: 12,
-        maxZoom: 18,
-        layers: [osm, raster2010, raster2025]
-    });
-
-    // --- Side-by-side control ---
-    var swipe = L.control.sideBySide(raster2010, raster2025).addTo(map);
 
     // --- Lat/Lon + Zoom indicator ---
     var coordsControl = L.control({ position: 'bottomleft' });
@@ -200,8 +191,7 @@
     title.addTo(map);
 
     // --- Custom attribution ---
-     var attribution = L.control({position: 'bottomright'});
-
+    var attribution = L.control({position: 'bottomright'});
     attribution.onAdd = function(map) {
         var div = L.DomUtil.create('div', 'ctl src');
         div.innerHTML = '<a href="https://github.com/fer-at-sea/mataro_swipe_map" target="_blank">fer-at-sea (Seagrass Ecology Group GEAM IEO-CSIC)</a>';
@@ -243,106 +233,7 @@
     addLegend(species_colors_2010, 'bottomleft', 'Alguer Mataró 2010');
     addLegend(species_colors_2025, 'bottomright', 'Mapa dels hàbitats marins 2025');
     
-    // --- Fit map to raster bounds ---
-    map.fitBounds([[41.495, 2.419], [41.556, 2.532]]);
 
-    
-    // Load layers
-    fetch("video_points.geojson")
-        .then(response => response.json())
-        .then(data => {
-            var videoPointsLayer = L.geoJSON(data, {
-                pointToLayer: function(feature, latlng) {
-                    return L.circleMarker(latlng, {
-                        radius: 6,
-                        fillColor: "#ff0000",
-                        color: "#000",
-                        weight: 1,
-                        fillOpacity: 0.9
-                    });
-                },
-                onEachFeature: function(feature, layer) {
-                    if (feature.properties) {
-                        layer.bindPopup(
-                            Object.entries(feature.properties)
-                                  .map(([k,v]) => `<b>${k}</b>: ${v}`)
-                                  .join("<br>")
-                        );
-                    }
-                }
-            }).addTo(map);
-        })
-
-    fetch("video_tracks.geojson")
-        .then(response => response.json())
-        .then(data => {
-            const tracksLayer = L.geoJSON(data, {
-            style: {
-                color: "#ff5500",
-                weight: 3,
-                opacity: 0.9
-            },
-            onEachFeature: function(feature, layer) {
-                const p = feature.properties;
-                const popupContent = `
-                <b>Track ID:</b> ${p.ID}<br>
-                <b>Project:</b> ${p.project}
-                `;
-                layer.bindPopup(popupContent);
-            }
-            }).addTo(map);
-        });
-
-    fetch("stations.geojson")
-        .then(response => response.json())
-        .then(data => {
-            const stationsLayer = L.geoJSON(data, {
-            pointToLayer: function(feature, latlng) {
-                return L.circleMarker(latlng, {
-                radius: 6,
-                color: "#0055ff",
-                weight: 2,
-                fillColor: "#66aaff",
-                fillOpacity: 0.9
-                });
-            },
-            onEachFeature: function(feature, layer) {
-                const p = feature.properties;
-                const popupContent = `
-                <b>${p.station}</b><br>
-                <b>Depth:</b> ${p.z}<br>
-                <b>Project:</b> ${p.project}<br>
-                <b>Species:</b> ${p.sps}<br>
-                <b>X:</b> ${p.x}<br>
-                <b>Y:</b> ${p.y}
-                `;
-                layer.bindPopup(popupContent);
-            }
-            }).addTo(map);
-        });
-
-    fetch('points_2010.geojson')
-        .then(response => response.json())
-        .then(data => {
-            const points2010Layer = L.geoJSON(data, {
-                pointToLayer: (feature, latlng) => {
-                    return L.circleMarker(latlng, {
-                        radius: 2,
-                        color: "#8000ff",
-                        fillColor: "#8000ff",
-                        fillOpacity: 0.8
-                    });
-                },
-                onEachFeature: (feature, layer) => {
-                    const props = feature.properties;
-                    const label = `
-                        <b>Punto 2010</b><br>
-                        <b>DXF_LAYER:</b> ${props.DXF_LAYER}
-                    `;
-                    layer.bindPopup(label);
-                }
-            }).addTo(map);
-        })
 
 
   </script>
