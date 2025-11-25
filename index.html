@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
-  <title>Mataró 2010 vs 2025 Side-by-Side</title>
+  <title>Mataró 2010 vs 2025</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -60,7 +60,7 @@
             maxZoom: 18,
             layers: [osm, raster2010, raster2025]
         });
-        
+
     // Side-by-side control
     var swipe = L.control.sideBySide(raster2010, raster2025).addTo(map);
 
