@@ -6,8 +6,8 @@
   <title>Mataró 2010 vs 2025 Side-by-Side</title>
 
   <!-- Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.5/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@0.7.5/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/digidem/leaflet-side-by-side@2.0.0/leaflet-side-by-side.min.js"></script>
 
   <style>
@@ -93,6 +93,13 @@
             div.innerHTML = text + " , zoom: " + map.getZoom();
         }
     });
+    
+    // Scale bar
+    L.control.scale({
+        metric: true,
+        imperial: false,
+        maxWidth: 150
+    }).addTo(map);
 
     // --- Map title ---
     var title = L.control();
@@ -147,12 +154,38 @@
     addLegend(species_colors_2010, 'bottomleft', 'Alguer Mataró 2010');
     addLegend(species_colors_2025, 'bottomright', 'Mapa dels hàbitats marins 2025');
     
-    
-
-
-
     // --- Fit map to raster bounds ---
     map.fitBounds([[41.495, 2.419], [41.556, 2.532]]);
+
+    
+    // Load layers
+    fetch("video_points.geojson")
+        .then(response => response.json())
+        .then(data => {
+            var videoPointsLayer = L.geoJSON(data, {
+                pointToLayer: function(feature, latlng) {
+                    return L.circleMarker(latlng, {
+                        radius: 6,
+                        fillColor: "#ff0000",
+                        color: "#000",
+                        weight: 1,
+                        fillOpacity: 0.9
+                    });
+                },
+                onEachFeature: function(feature, layer) {
+                    if (feature.properties) {
+                        layer.bindPopup(
+                            Object.entries(feature.properties)
+                                  .map(([k,v]) => `<b>${k}</b>: ${v}`)
+                                  .join("<br>")
+                        );
+                    }
+                }
+            }).addTo(map);
+        })
+        .catch(err => console.error("Error loading video_points.geojson:", err));
+
+
   </script>
 </body>
 </html>
