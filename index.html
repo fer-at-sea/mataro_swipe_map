@@ -91,26 +91,27 @@
     });
 
     var videoPointsLayer = L.geoJSON(null, {
-        pointToLayer: function(feature, latlng) {
+    pointToLayer: function(feature, latlng) {
         return L.circleMarker(latlng, {
-          radius: 5,
-          color: '#ffffff',
-          fillColor: '#ff7f0e',
-          fillOpacity: 0.9,
-          weight: 1
+            radius: 5,
+            color: '#ffffff',
+            fillColor: '#ff7f0e',
+            fillOpacity: 0.9,
+            weight: 1
         });
-      },
-        onEachFeature: function(feature, layer) {
-            // small custom popup: use Ref / Ref_punto / Observado if present
-            var p = feature.properties || {};
-            var title = p.Ref_punto || p.Ref || p.Ref_point || 'Video point';
-            var html = '<b>' + title + '</b><br/>';
-            if (p.Observado) html += '<b>Observed:</b> ' + p.Observado + '<br/>';
-            if (p.Cartografia) html += '<b>Carto:</b> ' + p.Carto_antigua + ' / ' + p.Carto_nueva + '<br/>';
-            // fallback: show all props
-            html += '<hr>' + propsToHtml(p, '');
-            layer.bindPopup(html);
+    },
+    onEachFeature: function(feature, layer) {
+        var p = feature.properties || {};
+        var title = p.Ref_punto || p.Ref || p.Ref_point || 'Video point';
+        var html = '<b>' + title + '</b><br/>';
+        if (p.Observado) html += '<b>Observed:</b> ' + p.Observado + '<br/>';
+        if (p["Carto antigua"] || p["Carto nueva"]) {
+            html += '<b>Carto:</b> ' + (p["Carto antigua"] || '-') + ' / ' + (p["Carto nueva"] || '-') + '<br>';
         }
+        // fallback: show all props
+        html += '<hr>' + Object.entries(p).map(([k,v]) => `${k}: ${v}`).join('<br>');
+        layer.bindPopup(html);
+    }
     });
 
     var points2010Layer = L.geoJSON(null, {
