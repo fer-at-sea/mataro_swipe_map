@@ -35,7 +35,96 @@
         attribution: '&copy; OpenStreetMap contributors',
         minZoom: 12, maxZoom: 18
     });
+
+    // Empty vector layers
+    var stationsLayer = L.geoJSON(null, {
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, {
+                radius: 6,
+                color: "#000",
+                fillColor: "#00A1FF",
+                fillOpacity: 0.9
+            }).bindPopup(
+                `<b>${feature.properties.station}</b><br>
+                Proyecto: ${feature.properties.project}<br>
+                Profundidad: ${feature.properties.z}`
+            );
+        }
+    });
+
+    var videoTracksLayer = L.geoJSON(null, {
+        style: {
+            color: "#FF6600",
+            weight: 3
+        },
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup(`<b>Track</b><br>ID: ${feature.properties.ID}`);
+        }
+    });
+
+    var videoPointsLayer = L.geoJSON(null, {
+        pointToLayer: function(feature, latlng) {
+        return L.circleMarker(latlng, {
+          radius: 5,
+          color: '#ffffff',
+          fillColor: '#ff7f0e',
+          fillOpacity: 0.9,
+          weight: 1
+        });
+      },
+        onEachFeature: function(feature, layer) {
+            // small custom popup: use Ref / Ref_punto / Observado if present
+            var p = feature.properties || {};
+            var title = p.Ref_punto || p.Ref || p.Ref_point || 'Video point';
+            var html = '<b>' + title + '</b><br/>';
+            if (p.Observado) html += '<b>Observed:</b> ' + p.Observado + '<br/>';
+            if (p.Cartografia) html += '<b>Carto:</b> ' + p.Carto_antigua + ' / ' + p.Carto_nueva + '<br/>';
+            // fallback: show all props
+            html += '<hr>' + propsToHtml(p, '');
+            layer.bindPopup(html);
+        }
+    });
+
+    var points2010Layer = L.geoJSON(null, {
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, {
+                radius: 2,
+                color: "black",
+                fillColor: "black",
+                fillOpacity: 0.8
+            }).bindPopup(
+                `<b>Punto 2010</b><br>${feature.properties.DXF_LAYER}`
+            );
+        }
+    });
+
+    // Fetch data
+    fetch('stations.geojson')
+        .then(res => res.json())
+        .then(data => stationsLayer.addData(data));
+
+    fetch('video_tracks.geojson')
+        .then(res => res.json())
+        .then(data => videoTracksLayer.addData(data));
     
+    fetch('video_points.geojson')
+        .then(res => res.json())
+        .then(data => videoPointsLayer.addData(data));
+
+    fetch('points_2010.geojson')
+        .then(res => res.json())
+        .then(data => points2010Layer.addData(data));
+
+    // Layer control
+    var overlayMaps = {
+    "Stations": stationsLayer,
+    "Video tracks": videoTracksLayer,
+    "Video points": videoPointsLayer,
+    "Points 2010": points2010Layer
+    };
+
+    L.control.layers(null, overlayMaps, { position: 'topleft' }).addTo(map);
+            
 
     // --- Overlay rasters ---
     var raster2010 = L.tileLayer('./tiles_2010/{z}/{x}/{y}.png', {
