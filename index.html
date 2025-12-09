@@ -122,18 +122,35 @@
         }
     });
 
+     // Vector layers
+    var extraPointsLayer = L.geoJSON(null, {
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, {
+                radius: 5,
+                color: "#ffffff",
+                fillColor: "purple",
+                fillOpacity: 0.9
+            }).bindPopup(
+                `<b>${feature.properties.id}</b><br>
+                Habitat: P. oceanica<br>`
+            );
+        }
+    });
+
     // Fetch data
     fetch('stations.geojson').then(res => res.json()).then(data => stationsLayer.addData(data));
     fetch('video_tracks.geojson').then(res => res.json()).then(data => videoTracksLayer.addData(data));
     fetch('video_points.geojson').then(res => res.json()).then(data => videoPointsLayer.addData(data));
     fetch('points_2010.geojson').then(res => res.json()).then(data => points2010Layer.addData(data));
+    fetch('extra_points.geojson').then(res => res.json()).then(data => extraPointsLayer.addData(data));
     
     // --- Layer control ---
     L.control.layers(null,{
         "Stations": stationsLayer,
         "Video tracks": videoTracksLayer,
         "Video points": videoPointsLayer,
-        "Points 2010": points2010Layer
+        "Points 2010": points2010Layer,
+        "Extra points": extraPointsLayer
     }, {position:'topleft'}).addTo(map);
 
     // Fit bounds
