@@ -46,7 +46,7 @@
 
     // Base maps
     var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
+        attribution: 'OpenStreetMap Basemap',
         minZoom: 12, maxZoom: 18
     });
 
@@ -55,16 +55,18 @@
         tms: 1,
         opacity: 1,
         minZoom: 12, maxZoom: 18,
-        attribution: "2010 Raster"
+        attribution: "INTECSA-INARSA 2010 Cartografía de les comunitats de les fanerògames marines situades davant del terme municipal de Mataró (Àrea de Medi Ambient de la Diputació de Barcelona)"
     });
 
     var raster2025 = L.tileLayer('./tiles_2025/{z}/{x}/{y}.png', {
         tms: 1,
         opacity: 1,
         minZoom: 12, maxZoom: 18,
-        attribution: "2025 Raster"
+        attribution: '<a href="https://mediambient.gencat.cat/ca/05_ambits_dactuacio/patrimoni_natural/sistemes_dinformacio/habitats/habitats-marins/projecte-mapa-dels-habitats-marins-de-catalunya/" target="_blank" rel="noopener">Mapa dels hàbitats marins a Catalunya 2025</a> (Departament de Medi Ambient i Sostenibilitat de la Generalitat de Catalunya) | Visualización realizada con amor por Fernando García-González, código disponible en <a href="https://github.com/fer-at-sea/mataro_swipe_map" target="_blank" rel="noopener">Github</a>'
     });
-    
+
+
+
     // Map 
         var map = L.map('map', {
             center: [41.525, 2.475],
@@ -171,7 +173,7 @@
             
 
     // --- Lat/Lon + Zoom indicator ---
-    var coordsControl = L.control({ position: 'bottomleft' });
+    var coordsControl = L.control({ position: 'topleft' });
 
     coordsControl.onAdd = function(map) {
         var div = L.DomUtil.create('div', 'ctl coords');
@@ -202,9 +204,10 @@
     
     // Scale bar
     L.control.scale({
+        position: 'topleft',
         metric: true,
         imperial: false,
-        maxWidth: 150
+        maxWidth: 150,
     }).addTo(map);
 
     // --- Map title ---
@@ -257,8 +260,8 @@
         legend.addTo(map);
     }
 
-    addLegend(species_colors_2010, 'bottomleft', 'INTECSA-INARSA 2010');
-    addLegend(species_colors_2025, 'bottomright', 'Mapa dels Hàbitats Marins de Catalunya 2025');
+    addLegend(species_colors_2010, 'topleft', 'INTECSA-INARSA 2010');
+    addLegend(species_colors_2025, 'topright', 'Mapa dels Hàbitats Marins de Catalunya 2025');
     
 
 
