@@ -23,7 +23,20 @@
         font-size: 12px;
     }
     .title { font-size: 18pt; font-weight: bold; margin-bottom: 5px; }
-    .legend i { width: 18px; height: 18px; display: inline-block; margin-right: 5px; }
+    .legend .color-box {
+        width: 18px;
+        height: 18px;
+        display: inline-block;
+        margin-right: 5px;
+        vertical-align: middle;
+    }
+    .color-box {
+        width: 18px;
+        height: 18px;
+        display: inline-block;
+        margin-right: 5px;
+        vertical-align: middle;
+    }
   </style>
 </head>
 <body>
@@ -203,31 +216,31 @@
     };
     title.addTo(map);
 
-    // --- Custom attribution ---
-    var attribution = L.control({position: 'bottomright'});
-    attribution.onAdd = function(map) {
-        var div = L.DomUtil.create('div', 'ctl src');
-        div.innerHTML = '<a href="https://github.com/fer-at-sea/mataro_swipe_map" target="_blank">fer-at-sea (Seagrass Ecology Group GEAM IEO-CSIC)</a>';
-        return div;
-    };
 
-    attribution.addTo(map);
 
 
     // --- Legends ---
     var species_colors_2010 = {
-        'Cymodocea nodosa': '#7f2ca0', 
-        'Posidonia a taques': "#0d00ff",
-        'Posidonia poc densa': "#bff8b4",
-        'Posidonia densa': "#49f327",
-        'Posidonia molt densa': "#166b05",
-        'Mata morta': '#d62728'
+        'P. oceanica muy densa': "#166b05",
+        'P. oceanica densa': "#49f327",
+        'P. oceanica poco densa': "#bff8b4",
+        'P. oceanica a manchas': "#0d00ff",
+        'Mata muerta': '#d62728',
+        'C. nodosa': '#7f2ca0', 
     };
 
     var species_colors_2025 = {
-        'Cymodocea nodosa': '#7f2ca0',
-        'Posidonia oceanica': "#166B05"
+        'P. oceanica': "#166B05",
+        'C. nodosa': '#7f2ca0'
     };
+
+    function italicizeSpecies(label) {
+    return label.replace(/(P\. oceanica|C\. nodosa)/g, '<i>$1</i>');
+}
+
+    function italicizeSpecies(label) {
+        return label.replace(/(P\. oceanica|C\. nodosa)/g, '<i>$1</i>');
+    }
 
     function addLegend(colors, position, titleText) {
         var legend = L.control({position: position});
@@ -236,15 +249,16 @@
             div.innerHTML = "<b>" + titleText + "</b><br>";
             for (var key in colors) {
                 div.innerHTML +=
-                    '<i style="background:' + colors[key] + '"></i> ' + key + '<br>';
+                    '<span class="color-box" style="background:' + colors[key] + '"></span> ' +
+                    italicizeSpecies(key) + '<br>';
             }
             return div;
         };
         legend.addTo(map);
     }
 
-    addLegend(species_colors_2010, 'bottomleft', 'Alguer Mataró 2010');
-    addLegend(species_colors_2025, 'bottomright', 'Mapa dels hàbitats marins 2025');
+    addLegend(species_colors_2010, 'bottomleft', 'INTECSA-INARSA 2010');
+    addLegend(species_colors_2025, 'bottomright', 'Mapa dels Hàbitats Marins de Catalunya 2025');
     
 
 
