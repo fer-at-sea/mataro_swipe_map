@@ -160,13 +160,26 @@
     fetch('extra_points.geojson').then(res => res.json()).then(data => extraPointsLayer.addData(data));
     
     // --- Layer control ---
-    L.control.layers(null,{
+    var layersControl = L.control.layers(null,{
         "Stations": stationsLayer,
         "Video tracks": videoTracksLayer,
         "Video points": videoPointsLayer,
         "Points 2010": points2010Layer,
         "Extra points": extraPointsLayer
     }, {position:'topleft'}).addTo(map);
+
+    // Add a title to the layer control
+    setTimeout(function() {
+        var controls = document.getElementsByClassName('leaflet-control-layers-list');
+        if (controls.length > 0) {
+            var title = document.createElement('div');
+            title.textContent = 'Datos de campo empleados para evaluar los mapas';
+            title.style.fontWeight = 'bold';
+            title.style.marginBottom = '6px';
+            title.style.fontSize = '13px';
+            controls[0].insertBefore(title, controls[0].firstChild);
+        }
+    }, 100);
 
     // Fit bounds
     map.fitBounds([[41.495, 2.419], [41.556, 2.532]]);
