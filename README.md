@@ -1,20 +1,18 @@
-# Mataró Seagrass Cartography Swipe Map
+**Idiomas:** [English](README_en.md) | Español | [Català](README_cat.md)
 
-This repository hosts an interactive **swipe map** designed to visually compare two seagrass cartographies for the coastal area of **Mataró**:
+# Mapa deslizante de cartografía de fanerógamas marinas de Mataró
 
-- **2010**: INTECSA-INARSA, Cartografía de les comunitats de les fanerògames marines situades davant del terme municipal de Mataró (Maresme). Diputació de Barcelona, Àrea de Medi Ambient.
-- **2025**: [Mapa dels hàbitats marins a Catalunya](https://mediambient.gencat.cat/ca/05_ambits_dactuacio/patrimoni_natural/sistemes_dinformacio/habitats/habitats-marins/projecte-mapa-dels-habitats-marins-de-catalunya/). Generalitat de Catalunya, Departament de Medi Ambient i Sostenibilitat.
+Este repositorio alberga un **mapa interactivo con deslizador** diseñado para comparar visualmente dos cartografías de fanerógamas marinas en el área costera de **Mataró**:
 
-      
-It also includes a series of reference data to assess the accuracy of both cartographies, collaboratively gathered by:
-	
--	Grupo de Ecología de Angiospermas Marinas (GEAM), [Instituto Español de Oceanografía (IEO-CSIC)](https://www.ieo.es).
+- **2010**: INTECSA-INARSA, *Cartografía de las comunidades de fanerógamas marinas situadas frente al término municipal de Mataró (Maresme)*. Diputación de Barcelona, Área de Medio Ambiente.
+- **2025**: [Mapa de los hábitats marinos en Cataluña](https://mediambient.gencat.cat/ca/05_ambits_dactuacio/patrimoni_natural/sistemes_dinformacio/habitats/habitats-marins/projecte-mapa-dels-habitats-marins-de-catalunya/). Generalitat de Catalunya, Departamento de Medio Ambiente y Sostenibilidad.
+
+Asimismo, incluye una serie de datos de referencia para evaluar la exactitud de ambas cartografías, recopilados de forma colaborativa por:
+
+- Grupo de Ecología de Angiospermas Marinas (GEAM), [Instituto Español de Oceanografía (IEO-CSIC)](https://www.ieo.es).
 - [Centro de Estudios Avanzados de Blanes (CEAB-CSIC)](https://www.ceab.csic.es).
--	[Universidad de Barcelona](https://www.ub.edu/portal/web/dp-beeca-es/ecologia1).
+- [Universidad de Barcelona](https://www.ub.edu/portal/web/dp-beeca-es/ecologia1).
 - [Escola de Mar de Badalona](https://www.badalona.cat/ca/serveis-ajuntament/mediambient-i-sostenibilitat/edudacio-ambiental/escola-del-mar).
-  
-  
 
-
-## Objective
-The swipe interface allows users to explore spatial differences between habitat maps by sliding a vertical bar that reveals one layer over the other, facilitating visual assessment of changes in mapping criteria and seagrass meadow extent. Additional reference data layers can be toggled on and off via the upper-left menu.
+## Objetivo
+La interfaz con deslizador permite a los usuarios explorar las diferencias espaciales entre los mapas de hábitats desplazando una barra vertical que revela una capa sobre la otra, facilitando la evaluación visual de los cambios en los criterios de cartografía y en la extensión de las praderas de fanerógamas marinas. Capas adicionales de datos de referencia pueden activarse o desactivarse mediante el menú situado en la esquina superior izquierda.
