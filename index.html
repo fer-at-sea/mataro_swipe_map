@@ -176,11 +176,11 @@
     });
 
     // Fetch data
-    fetch('stations.geojson').then(res => res.json()).then(data => stationsLayer.addData(data));
-    fetch('video_tracks.geojson').then(res => res.json()).then(data => videoTracksLayer.addData(data));
-    fetch('video_points.geojson').then(res => res.json()).then(data => videoPointsLayer.addData(data));
-    fetch('points_2010.geojson').then(res => res.json()).then(data => points2010Layer.addData(data));
-    fetch('extra_points.geojson').then(res => res.json()).then(data => extraPointsLayer.addData(data));
+    fetch('ref/stations.geojson').then(res => res.json()).then(data => stationsLayer.addData(data));
+    fetch('ref/video_tracks.geojson').then(res => res.json()).then(data => videoTracksLayer.addData(data));
+    fetch('ref/video_points.geojson').then(res => res.json()).then(data => videoPointsLayer.addData(data));
+    fetch('ref/points_2010.geojson').then(res => res.json()).then(data => points2010Layer.addData(data));
+    fetch('ref/extra_points.geojson').then(res => res.json()).then(data => extraPointsLayer.addData(data));
     
    
 
