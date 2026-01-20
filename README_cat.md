@@ -1,4 +1,4 @@
-**Idiomes:** [English](README_en.md) | [Español](README_es.md) | Català
+**Idiomes:** [English](README_en.md) | [Español](README.md) | Català
 
 # Mapa lliscant de cartografia de fanerògames marines de Mataró
 
