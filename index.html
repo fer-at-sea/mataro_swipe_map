@@ -11,6 +11,25 @@
   <script src="https://cdn.jsdelivr.net/gh/digidem/leaflet-side-by-side@2.0.0/leaflet-side-by-side.min.js"></script>
 
   <style>
+            /* Responsive legend width and wrapping */
+            .leaflet-control.ctl.legend {
+                max-width: 420px;
+                min-width: 120px;
+                word-break: break-word;
+                white-space: normal;
+            }
+            @media (max-width: 900px) {
+                .leaflet-control.ctl.legend {
+                    max-width: 200px;
+                    font-size: 11px;
+                }
+            }
+            @media (max-width: 600px) {
+                .leaflet-control.ctl.legend {
+                    max-width: 120px;
+                    font-size: 10px;
+                }
+            }
     body { margin:0; padding:0; }
     #map { position:absolute; top:0; bottom:0; width:100%; }
 
@@ -22,7 +41,9 @@
         text-align: left;
         font-size: 12px;
     }
-    .title { font-size: 18pt; font-weight: bold; margin-bottom: 5px; }
+    
+    .legend b {font-size: 38px;}
+
     .legend .color-box {
         width: 18px;
         height: 18px;
@@ -46,7 +67,7 @@
 
     // Base maps
     var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'OpenStreetMap Basemap',
+        attribution: 'OpenStreetMap',
         minZoom: 12, maxZoom: 18
     });
 
@@ -54,15 +75,14 @@
     var raster2010 = L.tileLayer('./tiles_2010/{z}/{x}/{y}.png', {
         tms: 1,
         opacity: 1,
-        minZoom: 12, maxZoom: 18,
-        attribution: "INTECSA-INARSA 2010 Cartografía de les comunitats de les fanerògames marines situades davant del terme municipal de Mataró (Àrea de Medi Ambient de la Diputació de Barcelona)"
+        minZoom: 12, maxZoom: 18
     });
 
     var raster2025 = L.tileLayer('./tiles_2025/{z}/{x}/{y}.png', {
         tms: 1,
         opacity: 1,
         minZoom: 12, maxZoom: 18,
-        attribution: '<a href="https://mediambient.gencat.cat/ca/05_ambits_dactuacio/patrimoni_natural/sistemes_dinformacio/habitats/habitats-marins/projecte-mapa-dels-habitats-marins-de-catalunya/" target="_blank" rel="noopener">Mapa dels hàbitats marins a Catalunya 2025</a> (Departament de Medi Ambient i Sostenibilitat de la Generalitat de Catalunya) | Visualización realizada con amor por Fernando García-González, código disponible en <a href="https://github.com/fer-at-sea/mataro_swipe_map" target="_blank" rel="noopener">Github</a>'
+        attribution: 'Visualización realizada por Fernando García-González | Código disponible en <a href="https://github.com/fer-at-sea/mataro_swipe_map" target="_blank" rel="noopener">Github</a>'
     });
 
 
@@ -73,8 +93,11 @@
             zoom: 14,
             minZoom: 12,
             maxZoom: 18,
-            layers: [osm, raster2010, raster2025]
+            layers: [osm, raster2010, raster2025],
+            zoomControl: false
         });
+
+
 
     // Side-by-side control
     var swipe = L.control.sideBySide(raster2010, raster2025).addTo(map);
@@ -159,7 +182,72 @@
     fetch('points_2010.geojson').then(res => res.json()).then(data => points2010Layer.addData(data));
     fetch('extra_points.geojson').then(res => res.json()).then(data => extraPointsLayer.addData(data));
     
-    // --- Layer control ---
+   
+
+    // Fit bounds
+    map.fitBounds([[41.495, 2.419], [41.556, 2.532]]);
+
+
+            
+
+    // --- Legends ---
+    var species_colors_2010 = {
+        'P. oceanica muy densa': "#166b05",
+        'P. oceanica densa': "#49f327",
+        'P. oceanica poco densa': "#bff8b4",
+        'P. oceanica a manchas': "#0d00ff",
+        'Mata muerta de P. oceanica': '#d62728',
+        'C. nodosa': '#7f2ca0', 
+    };
+
+    var species_colors_2025 = {
+        'P. oceanica': "#166B05",
+        'C. nodosa': '#7f2ca0'
+    };
+
+    function italicizeSpecies(label) {
+    return label.replace(/(P\. oceanica|C\. nodosa)/g, '<i>$1</i>');
+}
+
+    function italicizeSpecies(label) {
+        return label.replace(/(P\. oceanica|C\. nodosa)/g, '<i>$1</i>');
+    }
+
+    function addLegend(colors, position, titleText, fullText) {
+        var legend = L.control({position: position});
+        legend.onAdd = function(map) {
+            var div = L.DomUtil.create('div', 'ctl legend');
+            div.innerHTML = "<b>" + titleText + "</b>";
+            if (fullText) {
+                div.innerHTML += '<div style="font-size:12px;font-weight:normal;margin-bottom:4px;">' + fullText + '</div>';
+            }
+            for (var key in colors) {
+                div.innerHTML +=
+                    '<span class="color-box" style="background:' + colors[key] + '"></span> ' +
+                    italicizeSpecies(key) + '<br>';
+            }
+            return div;
+        };
+        legend.addTo(map);
+    }
+
+    addLegend(
+        species_colors_2010,
+        'topleft',
+        '2010',
+        '<span style="font-weight:bold;font-size:15px;">Cartografía de les comunitats de les fanerògames marines situades davant del terme municipal de Mataró</span><br><span style="font-size:12px;">INTECSA-INARSA. Àrea de Medi Ambient de la Diputació de Barcelona</span>'
+    );
+    addLegend(
+        species_colors_2025,
+        'topright',
+        '2025',
+        '<a href="https://mediambient.gencat.cat/ca/05_ambits_dactuacio/patrimoni_natural/sistemes_dinformacio/habitats/habitats-marins/projecte-mapa-dels-habitats-marins-de-catalunya/" target="_blank" rel="noopener" style="font-weight:bold;text-decoration:underline;color:#166B05;font-size:15px;">Mapa dels hàbitats marins a Catalunya</a><br><span style="font-size:12px;">Departament de Medi Ambient i Sostenibilitat de la Generalitat de Catalunya</span>'
+    );
+
+    // Add zoom control
+    L.control.zoom({ position: 'topleft' }).addTo(map);
+
+     // Layer control 
     var layersControl = L.control.layers(null,{
         "Estaciones de monitoreo de <i>P. oceanica</i> de diversos programas de seguimiento (CEAB, UB)": stationsLayer,
         "Tracks de vídeo submarino georreferenciado (IEO)": videoTracksLayer,
@@ -181,12 +269,8 @@
         }
     }, 100);
 
-    // Fit bounds
-    map.fitBounds([[41.495, 2.419], [41.556, 2.532]]);
-            
-
-    // --- Lat/Lon + Zoom indicator ---
-    var coordsControl = L.control({ position: 'topleft' });
+    // Lat/Lon + Zoom indicator
+    var coordsControl = L.control({ position: 'topright' });
 
     coordsControl.onAdd = function(map) {
         var div = L.DomUtil.create('div', 'ctl coords');
@@ -217,65 +301,12 @@
     
     // Scale bar
     L.control.scale({
-        position: 'topleft',
+        position: 'topright',
         metric: true,
         imperial: false,
         maxWidth: 150,
     }).addTo(map);
 
-    // --- Map title ---
-    var title = L.control();
-    title.onAdd = function(map) {
-        var div = L.DomUtil.create('div', 'ctl title');
-        div.innerHTML = "Mataró 2010 vs 2025";
-        return div;
-    };
-    title.addTo(map);
-
-
-
-
-    // --- Legends ---
-    var species_colors_2010 = {
-        'P. oceanica muy densa': "#166b05",
-        'P. oceanica densa': "#49f327",
-        'P. oceanica poco densa': "#bff8b4",
-        'P. oceanica a manchas': "#0d00ff",
-        'Mata muerta': '#d62728',
-        'C. nodosa': '#7f2ca0', 
-    };
-
-    var species_colors_2025 = {
-        'P. oceanica': "#166B05",
-        'C. nodosa': '#7f2ca0'
-    };
-
-    function italicizeSpecies(label) {
-    return label.replace(/(P\. oceanica|C\. nodosa)/g, '<i>$1</i>');
-}
-
-    function italicizeSpecies(label) {
-        return label.replace(/(P\. oceanica|C\. nodosa)/g, '<i>$1</i>');
-    }
-
-    function addLegend(colors, position, titleText) {
-        var legend = L.control({position: position});
-        legend.onAdd = function(map) {
-            var div = L.DomUtil.create('div', 'ctl legend');
-            div.innerHTML = "<b>" + titleText + "</b><br>";
-            for (var key in colors) {
-                div.innerHTML +=
-                    '<span class="color-box" style="background:' + colors[key] + '"></span> ' +
-                    italicizeSpecies(key) + '<br>';
-            }
-            return div;
-        };
-        legend.addTo(map);
-    }
-
-    addLegend(species_colors_2010, 'topleft', 'INTECSA-INARSA 2010');
-    addLegend(species_colors_2025, 'topright', 'Mapa dels Hàbitats Marins de Catalunya 2025');
-    
 
 
 
