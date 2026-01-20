@@ -1,10 +1,10 @@
 **Idiomas:** [English](README_en.md) | Español | [Català](README_cat.md)
 
-# Mapa deslizante de cartografía de fanerógamas marinas de Mataró
+# Visualización para comparar cartografías de fanerógamas marinas en Mataró
 
 Este repositorio alberga un **mapa interactivo con deslizador** diseñado para comparar visualmente dos cartografías de fanerógamas marinas en el área costera de **Mataró**:
 
-- **2010**: INTECSA-INARSA, *Cartografía de las comunidades de fanerógamas marinas situadas frente al término municipal de Mataró (Maresme)*. Diputación de Barcelona, Área de Medio Ambiente.
+- **2010**: INTECSA-INARSA, Cartografía de las comunidades de fanerógamas marinas situadas frente al término municipal de Mataró (Maresme). Diputación de Barcelona, Área de Medio Ambiente.
 - **2025**: [Mapa de los hábitats marinos en Cataluña](https://mediambient.gencat.cat/ca/05_ambits_dactuacio/patrimoni_natural/sistemes_dinformacio/habitats/habitats-marins/projecte-mapa-dels-habitats-marins-de-catalunya/). Generalitat de Catalunya, Departamento de Medio Ambiente y Sostenibilidad.
 
 Asimismo, incluye una serie de datos de referencia para evaluar la exactitud de ambas cartografías, recopilados de forma colaborativa por:
