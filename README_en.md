@@ -1,6 +1,6 @@
 **Languajes:** [English](README_en.md) | [Spanish](README.md) | [Català](README_cat.md)
 
-# Visualization for Comparing Seagrass Cartographies in Mataró
+# Visualization for comparing seagrass cartographies in Mataró
 
 This repository hosts an interactive **swipe map** designed to visually compare two seagrass cartographies for the coastal area of **Mataró**:
 
