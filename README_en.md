@@ -8,8 +8,4 @@ This repository hosts an interactive **swipe map** designed to visually compare 
 - **2025**: [Mapa dels hàbitats marins de Catalunya](https://mediambient.gencat.cat/ca/05_ambits_dactuacio/patrimoni_natural/sistemes_dinformacio/habitats/habitats-marins/projecte-mapa-dels-habitats-marins-de-catalunya/). Generalitat de Catalunya, Departament de Medi Ambient i Sostenibilitat.
 
   
- 
 
-
-## Objective
-The swipe interface allows users to explore spatial differences between habitat maps by sliding a vertical bar that reveals one layer over the other, facilitating visual assessment of changes in mapping criteria and seagrass meadow extent. Additional reference data layers can be toggled on and off via the upper-left menu.
