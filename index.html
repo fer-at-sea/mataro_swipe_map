@@ -102,85 +102,6 @@
     // Side-by-side control
     var swipe = L.control.sideBySide(raster2010, raster2025).addTo(map);
 
-    // Vector layers
-    var stationsLayer = L.geoJSON(null, {
-        pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, {
-                radius: 5,
-                color: "#ffffff",
-                fillColor: "#00A1FF",
-                fillOpacity: 0.9
-            }).bindPopup(
-                `<b>${feature.properties.station}</b><br>
-                Proyecto: ${feature.properties.project}<br>
-                Profundidad: ${feature.properties.z}`
-            );
-        }
-    });
-
-    var videoTracksLayer = L.geoJSON(null, {
-        style: {
-            color: "#FF6600",
-            weight: 3
-        },
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup(`<b>Track</b><br>ID: ${feature.properties.ID}`);
-        }
-    });
-
-    var videoPointsLayer = L.geoJSON(null, {
-    pointToLayer: function(feature, latlng) {
-        return L.circleMarker(latlng, {
-            radius: 5,
-            color: '#ffffff',
-            fillColor: '#ff7f0e',
-            fillOpacity: 0.9,
-            weight: 1
-        });
-    },
-    onEachFeature: function(feature, layer) {
-        var p = feature.properties || {};
-        var title = p.Ref_punto || 'Video point';
-        var html = '<b>' + title + '</b><br><hr>';
-        html += Object.entries(p).map(([k,v]) => `${k}: ${v}`).join('<br>');
-        layer.bindPopup(html);
-    }
-    });
-
-    var points2010Layer = L.geoJSON(null, {
-        pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, {
-                radius: 1,
-                color: "black",
-                fillColor: "black",
-                fillOpacity: 0.8
-            }).bindPopup(
-                `<b>Punto 2010</b><br>${feature.properties.DXF_LAYER}`
-            );
-        }
-    });
-
-     // Vector layers
-    var extraPointsLayer = L.geoJSON(null, {
-        pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, {
-                radius: 5,
-                color: "#ffffff",
-                fillColor: "purple",
-                fillOpacity: 0.9
-            }).bindPopup(
-                `<b>${feature.properties.id}</b><br>
-                Habitat: P. oceanica<br>`
-            );
-        }
-    });
-
-    // Fetch data
-    fetch('ref/stations.geojson').then(res => res.json()).then(data => stationsLayer.addData(data));
-    fetch('ref/video_tracks.geojson').then(res => res.json()).then(data => videoTracksLayer.addData(data));
-    fetch('ref/video_points.geojson').then(res => res.json()).then(data => videoPointsLayer.addData(data));
-    fetch('ref/points_2010.geojson').then(res => res.json()).then(data => points2010Layer.addData(data));
-    fetch('ref/extra_points.geojson').then(res => res.json()).then(data => extraPointsLayer.addData(data));
     
    
 
@@ -241,33 +162,12 @@
         species_colors_2025,
         'topright',
         '2025',
-        '<a href="https://mediambient.gencat.cat/ca/05_ambits_dactuacio/patrimoni_natural/sistemes_dinformacio/habitats/habitats-marins/projecte-mapa-dels-habitats-marins-de-catalunya/" target="_blank" rel="noopener" style="font-weight:bold;text-decoration:underline;color:#166B05;font-size:15px;">Mapa dels hàbitats marins a Catalunya</a><br><span style="font-size:12px;">Departament de Medi Ambient i Sostenibilitat de la Generalitat de Catalunya</span>'
+        '<a href="https://mediambient.gencat.cat/ca/05_ambits_dactuacio/patrimoni_natural/sistemes_dinformacio/habitats/habitats-marins/projecte-mapa-dels-habitats-marins-de-catalunya/" target="_blank" rel="noopener" style="font-weight:bold;text-decoration:underline;color:#166B05;font-size:15px;">Mapa dels hàbitats marins de Catalunya</a><br><span style="font-size:12px;">Departament de Medi Ambient i Sostenibilitat de la Generalitat de Catalunya</span>'
     );
 
     // Add zoom control
     L.control.zoom({ position: 'topleft' }).addTo(map);
 
-     // Layer control 
-    var layersControl = L.control.layers(null,{
-        "Estaciones de monitoreo de <i>P. oceanica</i> de diversos programas de seguimiento (CEAB, UB)": stationsLayer,
-        "Tracks de vídeo submarino georreferenciado (IEO)": videoTracksLayer,
-        "Puntos extraídos de los tracks de vídeo": videoPointsLayer,
-        "Puntos de control de <i>P. oceanica</i> recogidos para cartografía de 2010": points2010Layer,
-        "Puntos de <i>P. oceanica</i> recabados por la Escola de Mar de Badalona": extraPointsLayer
-    }, {position:'topleft'}).addTo(map);
-
-    // Add a title to the layer control
-    setTimeout(function() {
-        var controls = document.getElementsByClassName('leaflet-control-layers-list');
-        if (controls.length > 0) {
-            var title = document.createElement('div');
-            title.textContent = 'Datos de campo empleados para evaluar los mapas';
-            title.style.fontWeight = 'bold';
-            title.style.marginBottom = '6px';
-            title.style.fontSize = '13px';
-            controls[0].insertBefore(title, controls[0].firstChild);
-        }
-    }, 100);
 
     // Lat/Lon + Zoom indicator
     var coordsControl = L.control({ position: 'topright' });
